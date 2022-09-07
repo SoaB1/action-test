@@ -13,17 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup env
-        run: |
-          env_json=$(echo "${SECRETS}" | jq -r 'to_entries | .[] | @json')
-          for i in ${env_json}; do
-          env_key=$(echo "$i" | jq -r '.key')
-          env_value=$(echo "$i" | jq -r '.value')
-          echo "TF_ENV_${env_key,,}=${env_value}" >>"$GITHUB_ENV"
-          done
-        env:
-          SECRETS: ${{ toJson(secrets) }}
-
       - name: Terraform fmt
         run: terraform fmt -check
         working-directory: "./terraform"
@@ -34,6 +23,17 @@ jobs:
       - name: Terraform validate
         run: terraform validate -no-color
         working-directory: "./terraform"
+
+      - name: Setup env
+        run: |
+          env_json=$(echo "${SECRETS}" | jq -r 'to_entries | .[] | @json')
+          for i in ${env_json}; do
+          env_key=$(echo "$i" | jq -r '.key')
+          env_value=$(echo "$i" | jq -r '.value')
+          echo "TF_ENV_${env_key,,}=${env_value}" >>"$GITHUB_ENV"
+          done
+        env:
+          SECRETS: ${{ toJson(secrets) }}
 
       - name: Terraform plan for resources change
         run: terraform plan -input=false -no-color -lock-timeout=10m
