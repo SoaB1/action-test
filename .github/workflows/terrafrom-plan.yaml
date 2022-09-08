@@ -36,8 +36,8 @@ jobs:
           SECRETS: ${{ toJson(secrets) }}
 
       - name: Terraform plan for resources change
-        run: terraform plan -input=false -no-color -lock-timeout=10m
         id: tf_plan
+        run: terraform plan -input=false -no-color -lock-timeout=10m
         working-directory: "./terraform"
 
       - name: Run a one-line script
