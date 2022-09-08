@@ -40,11 +40,17 @@ jobs:
         id: tf_plan
         working-directory: "./terraform"
 
-      - name: Comment result to Pull Request
-        uses: robburger/terraform-pr-commenter@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          commenter_type: plan
-          commenter_input: ${{ format('{0}{1}', steps.tf_plan.outputs.stdout, steps.tf_plan.outputs.stderr) }}
-          commenter_exitcode: ${{ steps.tf_plan.outputs.exitcode }}
+      - name: Run a one-line script
+        run: |
+          echo ${{ steps.tf_plan.outputs.exitcode }}
+          echo ${{ steps.tf_plan.outputs.stdout }}
+          echo ${{ steps.tf_plan.outputs.stderr }}
+
+#      - name: Comment result to Pull Request
+#        uses: robburger/terraform-pr-commenter@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          commenter_type: plan
+#          commenter_input: ${{ format('{0}{1}', steps.tf_plan.outputs.stdout, steps.tf_plan.outputs.stderr) }}
+#          commenter_exitcode: ${{ steps.tf_plan.outputs.exitcode }}
