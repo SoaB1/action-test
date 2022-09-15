@@ -37,10 +37,4 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GHCR_TOKEN }}
 
-      - name: Push to GitHub Packages
-        uses: docker/build-push-action@v3
-        with:
-          context: ./build-amd64
-          platforms: linux/amd64
-          push: true
-          tags: ghcr.io/${{ env.OWNER_LC }}/${{ env.DOCKER_IMAGE }}:${{ env.IMAGE_TAG }}
+
