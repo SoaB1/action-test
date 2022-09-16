@@ -6,6 +6,9 @@ jobs:
   build:
     name: Push Docker image
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target: ["build-amd64", "build-arm64"]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -40,9 +43,7 @@ jobs:
       - name: Push to GitHub Packages
         uses: docker/build-push-action@v3
         with:
-          context: |
-            ./build-amd64
-            ./build-arm64
+          context: ./${{ matrix.target }}
           platforms: linux/amd64,linux/arm64/v8
           push: true
           tags: ghcr.io/${{ env.OWNER_LC }}/${{ env.DOCKER_IMAGE }}:${{ env.IMAGE_TAG }}
