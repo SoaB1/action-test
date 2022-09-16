@@ -40,15 +40,9 @@ jobs:
       - name: Push to GitHub Packages
         uses: docker/build-push-action@v3
         with:
-          context: ./build-arm64
-          platforms: linux/arm64/v8
-          push: true
-          tags: ghcr.io/${{ env.OWNER_LC }}/${{ env.DOCKER_IMAGE }}:${{ env.IMAGE_TAG }}
-
-      - name: Push to GitHub Packages
-        uses: docker/build-push-action@v3
-        with:
-          context: ./build-amd64
-          platforms: linux/amd64
+          context: |
+            ./build-amd64
+            ./build-arm64
+          platforms: linux/amd64,linux/arm64/v8
           push: true
           tags: ghcr.io/${{ env.OWNER_LC }}/${{ env.DOCKER_IMAGE }}:${{ env.IMAGE_TAG }}
