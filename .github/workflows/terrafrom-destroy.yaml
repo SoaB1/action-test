@@ -1,10 +1,7 @@
-name: Terraform apply
+name: Terraform destroy
 run-name: ${{ github.workflow }} (${{ github.ref_name }})
 
 on:
-  push:
-    branches:
-      - "main"
   workflow_dispatch:
 
 permissions:
@@ -16,8 +13,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  tf_apply:
-    name: Terraform apply
+  tf_destroy:
+    name: Terraform destroy
     runs-on: ubuntu-latest
 
     steps:
@@ -48,13 +45,18 @@ jobs:
         env:
           SECRETS: ${{ toJson(secrets) }}
 
-      - name: Terraform apply
-        id: tf_apply
-        run: terraform apply -input=false -no-color -auto-approve -lock-timeout=10m
+      - name: Terraform plan for resources change
+        run: terraform plan -destroy -input=false -no-color -lock-timeout=10m
+        id: tf_plan
+        working-directory: "./terraform"
+
+      - name: Terraform destroy
+        id: tf_destroy
+        run: terraform destroy -input=false -no-color -auto-approve -lock-timeout=10m
         working-directory: "./terraform"
 
       - name: Terraform output
-        if: contains(steps.tf_apply.outputs.stdout, 'No changes. Your infrastructure matches the configuration.') != true
+        if: contains(steps.tf_destroy.outputs.stdout, 'No changes. Your infrastructure matches the configuration.') != true
         id: tf_output
         run: |
           terraform output -json > /tmp/terraform-output.json
@@ -66,7 +68,7 @@ jobs:
         working-directory: "./terraform"
 
       - name: Send Webhook to discord
-        if: contains(steps.tf_apply.outputs.stdout, 'No changes. Your infrastructure matches the configuration.') != true
+        if: contains(steps.tf_destroy.outputs.stdout, 'No changes. Your infrastructure matches the configuration.') != true
         uses: sarisia/actions-status-discord@v1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
