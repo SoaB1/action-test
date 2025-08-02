@@ -1,0 +1,66 @@
+name: Terraform apply
+run-name: ${{ github.workflow }} (${{ github.ref_name }})
+
+on:
+  push:
+    branches:
+      - "main"
+  workflow_dispatch:
+
+permissions:
+  contents: "write"
+  id-token: "write"
+
+jobs:
+  tf_apply:
+    name: Terraform apply
+    runs-on: ubuntu-latest
+
+    concurrency: terraform_apply
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3.0.0
+        with:
+          cli_config_credentials_token: ${{ secrets.TERRAFORM_CLOUD_API_TOKEN }}
+          terraform_version: 1.2.1
+
+      - run: terraform init
+        working-directory: "./terraform"
+
+      - name: Setup env
+        run: |
+          env_json=$(echo "${SECRETS}" | jq -r 'to_entries | .[] | @json')
+          for i in ${env_json}; do
+          env_key=$(echo "$i" | jq -r '.key')
+          env_value=$(echo "$i" | jq -r '.value')
+          echo "TF_VAR_${env_key,,}=${env_value}" >>"$GITHUB_ENV"
+          done
+        env:
+          SECRETS: ${{ toJson(secrets) }}
+
+      - name: Terraform apply
+        id: tf_apply
+        run: terraform apply -input=false -no-color -auto-approve -lock-timeout=10m
+        working-directory: "./terraform"
+
+      - name: Terraform output
+        if: contains(steps.tf_apply.outputs.stdout, 'No changes. Your infrastructure matches the configuration.') != true
+        id: tf_output
+        run: |
+          terraform output -json > /tmp/terraform-output.json
+          jq -r '. | to_entries | map("\(.key) : \(.value.value)") | .[]' /tmp/terraform-output.json > /tmp/terraform-output.txt
+          delimiter="$(openssl rand -hex 8)"
+          echo "TF_OUTPUT<<$delimiter" >> "$GITHUB_ENV"
+          echo "$(cat /tmp/terraform-output.txt)" >> "$GITHUB_ENV"
+          echo "$delimiter" >> "$GITHUB_ENV"
+        working-directory: "./terraform"
+
+      - name: Send Webhook to discord
+        if: contains(steps.tf_apply.outputs.stdout, 'No changes. Your infrastructure matches the configuration.') != true
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          nodetail: true
+          content: "Hey <@&${{ secrets.DISCORD_ROLE_ID }}>\nTerraform output:\n```${{ env.TF_OUTPUT }}```"

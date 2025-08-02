@@ -15,6 +15,14 @@ terraform {
       version = "~> 0.21.1"
     }
   }
+
+  cloud {
+    organization = "Masaya-Network"
+
+    workspaces {
+      name = "action-test"
+    }
+  }
 }
 
 variable "email" {
@@ -47,10 +55,10 @@ data "cloudflare_access_identity_provider" "test_data" {
   name    = "MasayaNetwork"
 }
 
-resource "cloudflare_access_application" "test_network" {
-  zone_id          = var.zone_id
-  name             = "Test Network"
-  domain           = "*.test-aaa.${var.cloudflare_domain}"
-  type             = "self_hosted"
-  session_duration = "24h"
-}
+# resource "cloudflare_access_application" "test_network" {
+#   zone_id          = var.zone_id
+#   name             = "Test Network"
+#   domain           = "*.test-aaa.${var.cloudflare_domain}"
+#   type             = "self_hosted"
+#   session_duration = "24h"
+# }
