@@ -11,12 +11,14 @@ permissions:
   contents: "write"
   id-token: "write"
 
+concurrency:
+  group: terraform_changes_${{ github.ref_name }}
+  cancel-in-progress: true
+
 jobs:
   tf_apply:
     name: Terraform apply
     runs-on: ubuntu-latest
-
-    concurrency: terraform_apply
 
     steps:
       - uses: actions/checkout@v4
