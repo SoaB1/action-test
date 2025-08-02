@@ -15,6 +15,14 @@ terraform {
       version = "~> 0.21.1"
     }
   }
+
+  cloud {
+    organization = "Masaya-Network"
+
+    workspaces {
+      name = "action-test"
+    }
+  }
 }
 
 variable "email" {
