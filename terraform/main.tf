@@ -4,6 +4,16 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "3.16.0"
     }
+
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+
+    tailscale = {
+      source  = "tailscale/tailscale"
+      version = "~> 0.21.1"
+    }
   }
 }
 
