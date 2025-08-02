@@ -3,9 +3,10 @@ on:
   pull_request:
 
 permissions:
-  contents: 'write'
-  id-token: 'write'
-  pull-requests: 'write'
+  contents: "write"
+  id-token: "write"
+  pull-requests: "write"
+  issues: "write"
 
 jobs:
   tf_plan:
@@ -48,7 +49,7 @@ jobs:
         working-directory: "./terraform"
 
       - name: Comment result to Pull Request
-        uses: robburger/terraform-pr-commenter@v1
+        uses: SoaB1/terraform-pr-commenter@v1.6.4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
