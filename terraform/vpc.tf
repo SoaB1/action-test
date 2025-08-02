@@ -1,5 +1,5 @@
 resource "aws_vpc" "mnvpc_01" {
-  cidr_block = var.vpc_cidr
+  cidr_block = var.aws_vpc_cidr
   tags = {
     Name = "mnvpc-01"
   }
@@ -61,7 +61,7 @@ resource "aws_security_group" "mnsg_01" {
 }
 
 resource "aws_subnet" "subnet_001" {
-  cidr_block              = var.vpc_subnet_cidr
+  cidr_block              = var.aws_vpc_subnet_cidr
   map_public_ip_on_launch = true
   tags = {
     Name = "subnet-001"

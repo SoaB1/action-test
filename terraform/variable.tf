@@ -9,6 +9,13 @@ variable "tailscale_tailnet" {
   description = "Tailscale tailnet name"
   type        = string
 }
+
+
+variable "tailscale_tailnet_key" {
+  description = "Tailscale tailnet key"
+  type        = string
+  sensitive   = true
+}
 # endregion
 
 # region AWS variables
@@ -18,40 +25,33 @@ variable "aws_region" {
   default     = "ap-northeast-1"
 }
 
-variable "vpc_cidr" {
+variable "aws_vpc_cidr" {
   description = "CIDR block for the VPC"
   type        = string
   default     = "10.0.0.0/16"
 }
 
-variable "vpc_subnet_cidr" {
+variable "aws_vpc_subnet_cidr" {
   description = "CIDR block for the VPC subnet"
   type        = string
   default     = "10.0.1.0/24"
 }
 
-variable "ec2_instance_type" {
+variable "aws_ec2_instance_type" {
   description = "EC2 instance type for the Ansible server"
   type        = string
   default     = "t3.small"
 }
 
-variable "server_name" {
+variable "aws_ec2_server_name" {
   description = "Name tag for the Ansible server"
   type        = string
   default     = "Ansibleサーバ#1"
 }
 
-variable "server_private_ip" {
+variable "aws_ec2_server_private_ip" {
   description = "Private IP address for the Ansible server"
   type        = string
   default     = "10.0.0.2"
 }
-
-variable "tailscale_tailnet_key" {
-  description = "Tailscale tailnet key"
-  type        = string
-  sensitive   = true
-}
-
 # endregion
