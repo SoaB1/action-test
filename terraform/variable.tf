@@ -9,13 +9,6 @@ variable "tailscale_tailnet" {
   description = "Tailscale tailnet name"
   type        = string
 }
-
-
-variable "tailscale_tailnet_key" {
-  description = "Tailscale tailnet key"
-  type        = string
-  sensitive   = true
-}
 # endregion
 
 # region AWS variables
