@@ -12,6 +12,8 @@ data "template_file" "user_data" {
   template = file("./setup.sh")
   vars = {
     tailnet_key = tailscale_tailnet_key.tailnet_key.key
+    server_name = var.aws_ec2_server_name
+    subnet_cidr = var.aws_vpc_subnet_cidr
   }
 }
 
