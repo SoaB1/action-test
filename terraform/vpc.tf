@@ -35,7 +35,7 @@ resource "aws_route_table" "mnrt_01" {
 resource "aws_security_group" "mnsg_01" {
   description = "mnsg-01"
   egress {
-    cidr_blocks      = ["172.18.1.0/26"]
+    cidr_blocks      = [var.aws_vpc_subnet_cidr]
     description      = "Outbound - Allow all traffic to subnet-001"
     from_port        = 0
     to_port          = 0
@@ -45,8 +45,30 @@ resource "aws_security_group" "mnsg_01" {
     security_groups  = []
     self             = false
   }
+  egress {
+    cidr_blocks      = ["0.0.0.0/0"]
+    description      = "Outbound - Allow 80/TCP traffic"
+    from_port        = 0
+    to_port          = 80
+    protocol         = "tcp"
+    ipv6_cidr_blocks = []
+    prefix_list_ids  = []
+    security_groups  = []
+    self             = false
+  }
+  egress {
+    cidr_blocks      = ["0.0.0.0/0"]
+    description      = "Outbound - Allow 443/TCP traffic"
+    from_port        = 0
+    to_port          = 443
+    protocol         = "tcp"
+    ipv6_cidr_blocks = []
+    prefix_list_ids  = []
+    security_groups  = []
+    self             = false
+  }
   ingress {
-    cidr_blocks      = ["172.18.1.0/26"]
+    cidr_blocks      = [var.aws_vpc_subnet_cidr]
     description      = "Inbound - Allow all traffic from subnet-001"
     from_port        = 0
     to_port          = 0
