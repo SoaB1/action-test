@@ -2,7 +2,6 @@
 set -ex
 
 # Variables
-HOSTNAME="dvmn-ans-01"
 INSTALL_PKGS="wget unzip git python3 python3-pip pipx"
 ANSIBLE_DATA_DIR="/home/onp-provisioner/ansible"
 GIT_REPO_NAME="myhome"
@@ -24,14 +23,14 @@ send_notification() {
 
 ## Main
 # Set hostname
-hostnamectl set-hostname "$${HOSTNAME}"
+hostnamectl set-hostname "${server_name}"
 
 # Update system
 apt update && apt upgrade -y
 
 # Install necessary packages
 add-apt-repository ppa:git-core/ppa
-apt update && apt install -y $${INSTALL_PKGS}
+apt update && apt install -y "$${INSTALL_PKGS}"
 
 # Create new users
 for user in "$${USERS[@]}"; do
@@ -66,6 +65,7 @@ if [ -z "${tailnet_key}" ]; then
 else
     echo "Joining Tailscale network with key: ${tailnet_key}"
     tailscale up --auth-key="${tailnet_key}"
+    tailscale set --advertise-routes="${subnet_cidr}"
 fi
 
 # Install pipx
