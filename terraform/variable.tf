@@ -39,7 +39,7 @@ variable "aws_ec2_instance_type" {
 variable "aws_ec2_server_name" {
   description = "Name tag for the Ansible server"
   type        = string
-  default     = "Ansibleサーバ#1"
+  default     = "prmn-asm-01"
 }
 
 variable "aws_ec2_server_private_ip" {
