@@ -9,7 +9,9 @@ if [ -z "$SSH_KEY_PATH" ]; then
   exit 1
 fi
 
-nslookup "${ANSIBLE_HOST}"
+nslookup "${ANSIBLE_HOST}" | tee -a /tmp/script-result.log
+ping -c 4 "${ANSIBLE_HOST}" | tee -a /tmp/script-result.log
+nc -vzw 5 "${ANSIBLE_HOST}" 22 | tee -a /tmp/script-result.log
 
 # function sshCommand() {
 #     local -r ssh_command="$1"
