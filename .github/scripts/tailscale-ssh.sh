@@ -9,6 +9,10 @@ if [ -z "$SSH_KEY_PATH" ]; then
   exit 1
 fi
 
+echo "Start Sleep"
+
+sleep 10
+
 nslookup "${ANSIBLE_HOST}" | tee -a /tmp/script-result.log
 ping -c 4 "${ANSIBLE_HOST}" | tee -a /tmp/script-result.log
 nc -vzw 5 "${ANSIBLE_HOST}" 22 | tee -a /tmp/script-result.log
