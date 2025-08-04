@@ -17,13 +17,13 @@ nslookup "${ANSIBLE_HOST}" | tee -a /tmp/script-result.log
 ping -c 4 "${ANSIBLE_HOST}" | tee -a /tmp/script-result.log
 nc -vzw 5 "${ANSIBLE_HOST}" 22 | tee -a /tmp/script-result.log
 
-# function sshCommand() {
-#     local -r ssh_command="$1"
+function sshCommand() {
+    local -r ssh_command="$1"
 
-#     ssh -o StrictHostKeyChecking=no \
-#         -i "${SSH_KEY_PATH}" \
-#         "${ANSIBLE_USER}@${ANSIBLE_HOST}" \
-#         "${ssh_command}"
-# }
+    ssh -o StrictHostKeyChecking=no \
+        -i "${SSH_KEY_PATH}" \
+        "${ANSIBLE_USER}@${ANSIBLE_HOST}" \
+        "${ssh_command}"
+}
 
-# sshCommand "whoami;uname -n;date" > /tmp/script-result.log
+sshCommand "whoami;uname -n;date" > /tmp/script-result.log
