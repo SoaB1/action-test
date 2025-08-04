@@ -22,6 +22,8 @@ jobs:
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/private_key
           chmod 600 /tmp/private_key
+          ls -l /tmp/private_key
+          ls -l ./.github/workflows/tailscale-ssh.yaml
           ./.github/workflows/tailscale-ssh.yaml /tmp/private_key
 
       - name: Get date
