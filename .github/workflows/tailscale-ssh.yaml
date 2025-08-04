@@ -25,7 +25,7 @@ jobs:
           git ls-files -s
           ls -l /tmp/private_key
           ls -l ./.github/workflows/tailscale-ssh.yaml
-          ./.github/workflows/tailscale-ssh.yaml /tmp/private_key
+          ./.github/scripts/tailscale-ssh.sh /tmp/private_key
 
       - name: Get date
         env:
