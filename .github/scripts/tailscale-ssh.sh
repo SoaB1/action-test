@@ -9,6 +9,7 @@ if [ -z "$SSH_KEY_PATH" ]; then
   exit 1
 fi
 
+
 function sshCommand() {
     local -r ssh_command="$1"
 
