@@ -24,7 +24,7 @@ jobs:
           chmod 600 /tmp/private_key
           git ls-files -s
           ls -l /tmp/private_key
-          ls -l ./.github/workflows/tailscale-ssh.yaml
+          ls -l ./.github/scripts/tailscale-ssh.sh
           ./.github/scripts/tailscale-ssh.sh /tmp/private_key
 
       - name: Get date

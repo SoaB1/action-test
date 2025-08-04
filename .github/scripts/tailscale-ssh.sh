@@ -9,14 +9,15 @@ if [ -z "$SSH_KEY_PATH" ]; then
   exit 1
 fi
 
+nslookup "${ANSIBLE_HOST}"
 
-function sshCommand() {
-    local -r ssh_command="$1"
+# function sshCommand() {
+#     local -r ssh_command="$1"
 
-    ssh -o StrictHostKeyChecking=no \
-        -i "${SSH_KEY_PATH}" \
-        "${ANSIBLE_USER}@${ANSIBLE_HOST}" \
-        "${ssh_command}"
-}
+#     ssh -o StrictHostKeyChecking=no \
+#         -i "${SSH_KEY_PATH}" \
+#         "${ANSIBLE_USER}@${ANSIBLE_HOST}" \
+#         "${ssh_command}"
+# }
 
-sshCommand "whoami;uname -n;date" > /tmp/script-result.log
+# sshCommand "whoami;uname -n;date" > /tmp/script-result.log
