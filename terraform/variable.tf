@@ -47,4 +47,10 @@ variable "aws_ec2_server_private_ip" {
   type        = string
   default     = "10.0.0.2"
 }
+
+variable "ansible_webhook" {
+  description = "Webhook URL for Ansible to trigger playbooks"
+  type        = string
+  sensitive   = true
+}
 # endregion

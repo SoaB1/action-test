@@ -8,8 +8,6 @@ GIT_REPO_NAME="myhome"
 GITLAB_REPO_URL="https://gitlab.mrmasaya.com/SoaB1/$${GIT_REPO_NAME}.git"
 # REQUIREMENTS_PATH="$${ANSIBLE_DATA_DIR}/$${GIT_REPO_NAME}/provision/ansible/master-node"
 
-WEBHOOKS_URL="https://discord.com/api/webhooks/1400899281514266715/rKaWzwqQGMaTUMlcmabcqDVsb30U-tUZt1DiroOmZy6xsTeiodPTQyz2GhM4Pfb9hDrH"
-
 USERS=(
   "msyadmin"
   "onp-provisioner"
@@ -18,7 +16,7 @@ USERS=(
 # Function to send notifications
 send_notification() {
     local message="$1"
-    curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"<@&1339068066893529118>\n$${message}\"}" "$${WEBHOOKS_URL}"
+    curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"<@&1339068066893529118>\n$${message}\"}" "${webhook_url}"
 }
 
 ## Main
