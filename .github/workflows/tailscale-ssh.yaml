@@ -1,0 +1,39 @@
+name: Tailscale SSH
+run-name: ${{ github.workflow }} (${{ github.ref_name }})
+
+on:
+  workflow_dispatch:
+
+jobs:
+  tailscale_ssh:
+    name: Tailscale SSH
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Tailscale
+        uses: tailscale/github-action@v2
+        with:
+          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TAILSCALE_OAUTH_CLIENT_SECRET }}
+          tags: tag:ci
+
+      - name: Execute script on Tailscale SSH
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/private_key
+          chmod 600 /tmp/private_key
+          git ls-files -s
+          ls -l /tmp/private_key
+          ls -l ./.github/scripts/tailscale-ssh.sh
+          ./.github/scripts/tailscale-ssh.sh /tmp/private_key
+
+      - name: Get date
+        env:
+          TZ: "Asia/Tokyo"
+        run: echo "EXECUTE_DATE=$(date +%Y%m%d-%H%M%S)" >> "$GITHUB_ENV"
+
+      - name: Upload result log
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{ env.EXECUTE_DATE }}_script-result"
+          path: /tmp/script-result.log

@@ -28,3 +28,27 @@ provider "tailscale" {
   api_key = var.tailscale_api_key
   tailnet = var.tailscale_tailnet
 }
+
+module "aws" {
+  source = "./modules/aws"
+
+  aws_region                = var.aws_region
+  aws_vpc_cidr              = var.aws_vpc_cidr
+  aws_vpc_subnet_cidr       = var.aws_vpc_subnet_cidr
+  aws_ec2_instance_type     = var.aws_ec2_instance_type
+  aws_ec2_server_name       = var.aws_ec2_server_name
+  aws_ec2_server_private_ip = var.aws_ec2_server_private_ip
+  ansible_webhook           = var.ansible_webhook
+  tailscale_tailnet_key     = module.tailscale.tailnet_key
+
+  depends_on = [module.tailscale.tailnet_key]
+}
+
+module "tailscale" {
+  source = "./modules/tailscale"
+
+  tailscale_api_key   = var.tailscale_api_key
+  tailscale_tailnet   = var.tailscale_tailnet
+  aws_ec2_server_name = var.aws_ec2_server_name
+  aws_ec2_is_running  = module.aws.is_running
+}

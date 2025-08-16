@@ -1,0 +1,29 @@
+#!/bin/bash
+
+SSH_KEY_PATH="$1"
+ANSIBLE_USER="onp-provisioner"
+ANSIBLE_HOST="dvmn-ans-01.taile4dba.ts.net"
+
+if [ -z "$SSH_KEY_PATH" ]; then
+  echo "SSH key path is required."
+  exit 1
+fi
+
+echo "Start Sleep"
+
+sleep 10
+
+nslookup "${ANSIBLE_HOST}" | tee -a /tmp/script-result.log
+ping -c 4 "${ANSIBLE_HOST}" | tee -a /tmp/script-result.log
+nc -vzw 5 "${ANSIBLE_HOST}" 22 | tee -a /tmp/script-result.log
+
+function sshCommand() {
+    local -r ssh_command="$1"
+
+    ssh -o StrictHostKeyChecking=no \
+        -i "${SSH_KEY_PATH}" \
+        "${ANSIBLE_USER}@${ANSIBLE_HOST}" \
+        "${ssh_command}"
+}
+
+sshCommand "whoami;uname -n;date" > /tmp/script-result.log

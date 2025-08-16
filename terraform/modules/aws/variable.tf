@@ -1,16 +1,3 @@
-# region Tailscale variables
-variable "tailscale_api_key" {
-  description = "API key for Tailscale"
-  type        = string
-  sensitive   = true
-}
-
-variable "tailscale_tailnet" {
-  description = "Tailscale tailnet name"
-  type        = string
-}
-# endregion
-
 # region AWS variables
 variable "aws_region" {
   description = "AWS region to deploy resources"
@@ -50,6 +37,14 @@ variable "aws_ec2_server_private_ip" {
 
 variable "ansible_webhook" {
   description = "Webhook URL for Ansible to trigger playbooks"
+  type        = string
+  sensitive   = true
+}
+# endregion
+
+# region Tailscale variables
+variable "tailscale_tailnet_key" {
+  description = "Tailnet key for the Ansible server"
   type        = string
   sensitive   = true
 }
