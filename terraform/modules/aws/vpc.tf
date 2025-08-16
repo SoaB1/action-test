@@ -78,6 +78,17 @@ resource "aws_security_group" "mnsg_01" {
     security_groups  = []
     self             = false
   }
+  ingress {
+    cidr_blocks      = ["59.138.209.76/32"]
+    description      = "Inbound - Allow SSH"
+    from_port        = 22
+    to_port          = 22
+    protocol         = "tcp"
+    ipv6_cidr_blocks = []
+    prefix_list_ids  = []
+    security_groups  = []
+    self             = false
+  }
   name   = "mnsg-01"
   vpc_id = aws_vpc.mnvpc_01.id
 }
