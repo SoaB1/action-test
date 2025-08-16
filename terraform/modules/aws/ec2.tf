@@ -9,7 +9,7 @@ data "aws_ami" "ubuntu_noble_24_04" {
 }
 
 data "template_file" "user_data" {
-  template = file("${path.module}/setup.sh")
+  template = file("${path.module}/setup.sh.tftpl")
   vars = {
     tailnet_key = var.tailscale_tailnet_key
     webhook_url = var.ansible_webhook
