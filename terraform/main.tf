@@ -32,8 +32,6 @@ provider "tailscale" {
 module "aws" {
   source = "./modules/aws"
 
-  aws_region            = var.aws_region
-  aws_vpc_cidr          = var.aws_vpc_cidr
   ansible_webhook       = var.ansible_webhook
   tailscale_tailnet_key = module.tailscale.tailnet_key
 
