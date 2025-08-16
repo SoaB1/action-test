@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "[INFO] Starting setup script"
-echo "$$(date)"
+date
 echo ""
 set -ex
 
@@ -76,6 +76,10 @@ else
     tailscale set --advertise-routes="${subnet_cidr}"
 fi
 
+echo "[INFO] Completing Tailscale setup"
+date
+echo ""
+
 # Install pipx
 su - onp-provisioner -c "python3 -m pipx ensurepath"
 
@@ -106,5 +110,5 @@ su - onp-provisioner -c "cd $${ANSIBLE_DATA_DIR} && git clone $${GITLAB_REPO_URL
 send_notification "Ansible server setup completed successfully. Please check the logs for details."
 
 echo "[INFO] Ending setup script"
-echo "$$(date)"
+date
 echo ""
