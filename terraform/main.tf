@@ -40,6 +40,7 @@ module "aws" {
   aws_ec2_server_private_ip = var.aws_ec2_server_private_ip
   ansible_webhook           = var.ansible_webhook
   tailscale_tailnet_key     = module.tailscale.tailnet_key
+  tailscale_vpn_server_ip   = module.tailscale.vpn_server_ip
 
   depends_on = [module.tailscale.tailnet_key]
 }

@@ -1,3 +1,7 @@
+data "tailscale_device" "vpn_server" {
+  hostname = "dvmn-vpn-01"
+}
+
 resource "tailscale_tailnet_key" "tailnet_key" {
   description   = "Ansible Server Tailnet Key"
   reusable      = true
@@ -11,7 +15,7 @@ resource "time_sleep" "wait_join_tailnet" {
 }
 
 data "tailscale_device" "ansible_server" {
-  name = var.aws_ec2_server_name
+  hostname = var.aws_ec2_server_name
 
   depends_on = [time_sleep.wait_join_tailnet]
 }

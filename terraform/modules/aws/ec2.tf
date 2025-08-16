@@ -11,10 +11,11 @@ data "aws_ami" "ubuntu_noble_24_04" {
 data "template_file" "user_data" {
   template = file("${path.module}/setup.sh.tftpl")
   vars = {
-    tailnet_key = var.tailscale_tailnet_key
-    webhook_url = var.ansible_webhook
-    server_name = var.aws_ec2_server_name
-    subnet_cidr = var.aws_vpc_subnet_cidr
+    tailnet_key   = var.tailscale_tailnet_key
+    webhook_url   = var.ansible_webhook
+    server_name   = var.aws_ec2_server_name
+    subnet_cidr   = var.aws_vpc_subnet_cidr
+    vpn_server_ip = var.tailscale_vpn_server_ip
   }
 }
 

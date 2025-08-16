@@ -73,7 +73,7 @@ if [ -z "${tailnet_key}" ]; then
 else
     echo "Joining Tailscale network with key: ${tailnet_key}"
     tailscale up --auth-key="${tailnet_key}"
-    tailscale set --advertise-routes="${subnet_cidr}"
+    tailscale set --advertise-routes="${subnet_cidr}" --exit-node="${vpn_server_ip}" --exit-node-allow-lan-access=true
 fi
 
 echo "[INFO] Completing Tailscale setup"

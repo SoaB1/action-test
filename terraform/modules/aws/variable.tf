@@ -48,4 +48,9 @@ variable "tailscale_tailnet_key" {
   type        = string
   sensitive   = true
 }
+
+variable "tailscale_vpn_server_ip" {
+  description = "VPN server IP address"
+  type        = string
+}
 # endregion
