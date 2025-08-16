@@ -1,4 +1,7 @@
 #!/bin/bash
+echo "[INFO] Starting setup script"
+echo "$$(date)"
+echo ""
 set -ex
 
 # Variables
@@ -101,3 +104,7 @@ su - onp-provisioner -c "cd $${ANSIBLE_DATA_DIR} && git clone $${GITLAB_REPO_URL
 # set +e
 
 send_notification "Ansible server setup completed successfully. Please check the logs for details."
+
+echo "[INFO] Ending setup script"
+echo "$$(date)"
+echo ""
