@@ -5,7 +5,7 @@ resource "tailscale_tailnet_key" "tailnet_key" {
 }
 
 resource "time_sleep" "wait_join_tailnet" {
-  create_duration = "120s"
+  create_duration = "300s"
 
   depends_on = [var.aws_ec2_is_running]
 }
