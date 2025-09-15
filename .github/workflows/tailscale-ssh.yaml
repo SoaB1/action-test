@@ -25,7 +25,7 @@ jobs:
         uses: aws-actions/aws-secretsmanager-get-secrets@v2
         with:
           secret-ids: |
-            TEST_ENV,testSecret1
+            TEST_ENV_*
 
       # - name: Setup env
       #   run: |
@@ -38,7 +38,7 @@ jobs:
 
       - name: Show secrets
         run: |
-          echo "TEST_ENV: ${TEST_ENV%?}"
+          printenv | grep "TEST_ENV_"
       # - name: Set up Tailscale
       #   uses: tailscale/github-action@v2
       #   with:
