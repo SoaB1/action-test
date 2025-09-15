@@ -11,29 +11,44 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up Tailscale
-        uses: tailscale/github-action@v2
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
-          oauth-secret: ${{ secrets.TAILSCALE_OAUTH_CLIENT_SECRET }}
-          tags: tag:ci
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.IAM_ROLE_NAME }}
+          aws-region: ap-northeast-3
 
-      - name: Execute script on Tailscale SSH
+      - name: Get secrets by name and by ARN
+        uses: aws-actions/aws-secretsmanager-get-secrets@v2
+        with:
+          secret-ids: |
+            SSH_PRIVATE_KEY,ec2-key
+
+      - name: Show secrets
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/private_key
-          chmod 600 /tmp/private_key
-          git ls-files -s
-          ls -l /tmp/private_key
-          ls -l ./.github/scripts/tailscale-ssh.sh
-          ./.github/scripts/tailscale-ssh.sh /tmp/private_key
+          echo "SSH_PRIVATE_KEY: ${SSH_PRIVATE_KEY%?}"
+      # - name: Set up Tailscale
+      #   uses: tailscale/github-action@v2
+      #   with:
+      #     oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
+      #     oauth-secret: ${{ secrets.TAILSCALE_OAUTH_CLIENT_SECRET }}
+      #     tags: tag:ci
 
-      - name: Get date
-        env:
-          TZ: "Asia/Tokyo"
-        run: echo "EXECUTE_DATE=$(date +%Y%m%d-%H%M%S)" >> "$GITHUB_ENV"
+      # - name: Execute script on Tailscale SSH
+      #   run: |
+      #     echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/private_key
+      #     chmod 600 /tmp/private_key
+      #     git ls-files -s
+      #     ls -l /tmp/private_key
+      #     ls -l ./.github/scripts/tailscale-ssh.sh
+      #     ./.github/scripts/tailscale-ssh.sh /tmp/private_key
 
-      - name: Upload result log
-        uses: actions/upload-artifact@v4
-        with:
-          name: "${{ env.EXECUTE_DATE }}_script-result"
-          path: /tmp/script-result.log
+      # - name: Get date
+      #   env:
+      #     TZ: "Asia/Tokyo"
+      #   run: echo "EXECUTE_DATE=$(date +%Y%m%d-%H%M%S)" >> "$GITHUB_ENV"
+
+      # - name: Upload result log
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: "${{ env.EXECUTE_DATE }}_script-result"
+      #     path: /tmp/script-result.log
