@@ -25,11 +25,20 @@ jobs:
         uses: aws-actions/aws-secretsmanager-get-secrets@v2
         with:
           secret-ids: |
-            SSH_PRIVATE_KEY,ec2-key
+            TEST_ENV,testSecret1
+
+      - name: Setup env
+        run: |
+          env_json=$(echo "${TEST_ENV}" | jq -r 'to_entries | .[] | @json')
+          for i in ${env_json}; do
+          env_key=$(echo "$i" | jq -r '.key')
+          env_value=$(echo "$i" | jq -r '.value')
+          echo "TF_VAR_${env_key,,}=${env_value}" >>"$GITHUB_ENV"
+          done
 
       - name: Show secrets
         run: |
-          echo "SSH_PRIVATE_KEY: ${SSH_PRIVATE_KEY%?}"
+          echo "TF_VAR_testsecret: ${TF_VAR_testsecret%?}"
       # - name: Set up Tailscale
       #   uses: tailscale/github-action@v2
       #   with:
