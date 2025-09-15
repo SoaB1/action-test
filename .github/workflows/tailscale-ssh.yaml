@@ -27,18 +27,18 @@ jobs:
           secret-ids: |
             TEST_ENV,testSecret1
 
-      - name: Setup env
-        run: |
-          env_json=$(echo "${TEST_ENV}" | jq -r 'to_entries | .[] | @json')
-          for i in ${env_json}; do
-          env_key=$(echo "$i" | jq -r '.key')
-          env_value=$(echo "$i" | jq -r '.value')
-          echo "TF_VAR_${env_key,,}=${env_value}" >>"$GITHUB_ENV"
-          done
+      # - name: Setup env
+      #   run: |
+      #     env_json=$(echo "${TEST_ENV}" | jq -r 'to_entries | .[] | @json')
+      #     for i in ${env_json}; do
+      #     env_key=$(echo "$i" | jq -r '.key')
+      #     env_value=$(echo "$i" | jq -r '.value')
+      #     echo "TF_VAR_${env_key,,}=${env_value}" >>"$GITHUB_ENV"
+      #     done
 
       - name: Show secrets
         run: |
-          echo "TF_VAR_testsecret: ${TF_VAR_testsecret%?}"
+          echo "TEST_ENV: ${TEST_ENV%?}"
       # - name: Set up Tailscale
       #   uses: tailscale/github-action@v2
       #   with:
