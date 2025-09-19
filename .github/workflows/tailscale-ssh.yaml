@@ -25,7 +25,7 @@ jobs:
         uses: aws-actions/aws-secretsmanager-get-secrets@v2
         with:
           secret-ids: |
-            TEST_ENV,plain
+            TF_VAR_*
 
       # - name: Setup env
       #   run: |
@@ -38,10 +38,7 @@ jobs:
 
       - name: Show secrets
         run: |
-          echo "${TEST_ENV:0:1} ${TEST_ENV#?}"
-          # echo "${test1}"
-          # echo "${test2}"
-          # echo "${test3}"
+          printenv | grep "TF_VAR_"
 
       # - name: Set up Tailscale
       #   uses: tailscale/github-action@v2
