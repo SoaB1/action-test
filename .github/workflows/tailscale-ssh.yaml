@@ -38,7 +38,7 @@ jobs:
 
       - name: Show secrets
         run: |
-          echo "${TEST_ENV:0:1}${TEST_ENV#?}"
+          echo "${TEST_ENV:0:1} ${TEST_ENV#?}"
           # echo "${test1}"
           # echo "${test2}"
           # echo "${test3}"
