@@ -26,4 +26,5 @@ function sshCommand() {
         "${ssh_command}"
 }
 
-sshCommand "whoami;uname -n;date" > /tmp/script-result.log
+sshCommand "whoami;uname -n;date" >> /tmp/script-result.log
+sshCommand "ping -c 4 prmn-dns-01" >> /tmp/script-result.log
