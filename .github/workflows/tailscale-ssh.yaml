@@ -29,10 +29,14 @@ jobs:
             EC2_SSH_KEY, ec2-key
           name-transformation: none
 
-      - name: Setup env
-        run: |
-          echo "${EC2_SSH_KEY}" > /tmp/ec2_key
-          cat /tmp/ec2_key
+      # - name: Setup env
+      #   run: |
+      #     echo "${TEST_ENV}" | jq -r 'to_entries | .[] | "\(.key)=\(.value | @json)"' >>"$GITHUB_ENV"
+      #     # for i in ${env_json}; do
+      #     # env_key=$(echo "$i" | jq -r '.key')
+      #     # env_value=$(echo "$i" | jq -r '.value')
+      #     # echo "TF_VAR_${env_key,,}=${env_value}" >>"$GITHUB_ENV"
+      #     # done
 
       # - name: Show secrets
       #   run: |
@@ -41,29 +45,29 @@ jobs:
       #       echo "TF_VAR_${name}=${VAR_VALUE:0:1} ${VAR_VALUE#?}"
       #     done
 
-      # - name: Set up Tailscale
-      #   uses: tailscale/github-action@v2
-      #   with:
-      #     oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
-      #     oauth-secret: ${{ secrets.TAILSCALE_OAUTH_CLIENT_SECRET }}
-      #     tags: tag:ci
+      - name: Set up Tailscale
+        uses: tailscale/github-action@v2
+        with:
+          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TAILSCALE_OAUTH_CLIENT_SECRET }}
+          tags: tag:ci
 
-      # - name: Execute script on Tailscale SSH
-      #   run: |
-      #     echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/private_key
-      #     chmod 600 /tmp/private_key
-      #     git ls-files -s
-      #     ls -l /tmp/private_key
-      #     ls -l ./.github/scripts/tailscale-ssh.sh
-      #     ./.github/scripts/tailscale-ssh.sh /tmp/private_key
+      - name: Execute script on Tailscale SSH
+        run: |
+          echo "${EC2_SSH_KEY}" > /tmp/private_key
+          chmod 600 /tmp/private_key
+          git ls-files -s
+          ls -l /tmp/private_key
+          ls -l ./.github/scripts/tailscale-ssh.sh
+          ./.github/scripts/tailscale-ssh.sh /tmp/private_key
 
-      # - name: Get date
-      #   env:
-      #     TZ: "Asia/Tokyo"
-      #   run: echo "EXECUTE_DATE=$(date +%Y%m%d-%H%M%S)" >> "$GITHUB_ENV"
+      - name: Get date
+        env:
+          TZ: "Asia/Tokyo"
+        run: echo "EXECUTE_DATE=$(date +%Y%m%d-%H%M%S)" >> "$GITHUB_ENV"
 
-      # - name: Upload result log
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: "${{ env.EXECUTE_DATE }}_script-result"
-      #     path: /tmp/script-result.log
+      - name: Upload result log
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{ env.EXECUTE_DATE }}_script-result"
+          path: /tmp/script-result.log
