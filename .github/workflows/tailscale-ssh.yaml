@@ -38,7 +38,11 @@ jobs:
 
       - name: Show secrets
         run: |
-          printenv | grep "TF_VAR_"
+          printenv | grep "TF_VAR_" | while IFS='=' read -r VAR_NAME _; do
+            name="${VAR_NAME#TF_VAR_}"
+            echo "VAR_NAME: $VAR_NAME"
+            echo "${name:0:1} ${name#?}"
+          done
 
       # - name: Set up Tailscale
       #   uses: tailscale/github-action@v2
