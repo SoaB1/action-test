@@ -2,7 +2,7 @@
 
 SSH_KEY_PATH="$1"
 ANSIBLE_USER="onp-provisioner"
-ANSIBLE_HOST="dvmn-ans-01.taile4dba.ts.net"
+ANSIBLE_HOST="dvmn-asm-01.taile4dba.ts.net"
 
 if [ -z "$SSH_KEY_PATH" ]; then
   echo "SSH key path is required."
