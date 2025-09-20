@@ -31,7 +31,8 @@ jobs:
 
       - name: Setup env
         run: |
-          echo "${EC2_SSH_KEY:0:1} ${EC2_SSH_KEY#?}"
+          echo "${EC2_SSH_KEY}" > /tmp/ec2_key
+          cat /tmp/ec2_key
 
       # - name: Show secrets
       #   run: |
