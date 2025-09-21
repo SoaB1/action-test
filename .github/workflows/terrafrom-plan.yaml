@@ -24,10 +24,19 @@ jobs:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.IAM_ROLE_NAME }}
           aws-region: ap-northeast-3
 
+      - name: Get secrets by name and by ARN
+        uses: aws-actions/aws-secretsmanager-get-secrets@v2
+        with:
+          secret-ids: |
+            TF_VAR_*
+            TERRAFORM_CLOUD_API_TOKEN
+            GITHUB_TOKEN
+          name-transformation: none
+
       - uses: hashicorp/setup-terraform@v2
         with:
-          cli_config_credentials_token: ${{ secrets.TERRAFORM_CLOUD_API_TOKEN }}
-          terraform_version: 1.2.1
+          cli_config_credentials_token: ${{ env.TERRAFORM_CLOUD_API_TOKEN }}
+          terraform_version: 1.13.3
 
       - name: Terraform fmt
         run: terraform fmt -check
@@ -40,16 +49,16 @@ jobs:
         run: terraform validate -no-color
         working-directory: "./terraform"
 
-      - name: Setup env
-        run: |
-          env_json=$(echo "${SECRETS}" | jq -r 'to_entries | .[] | @json')
-          for i in ${env_json}; do
-          env_key=$(echo "$i" | jq -r '.key')
-          env_value=$(echo "$i" | jq -r '.value')
-          echo "TF_VAR_${env_key,,}=${env_value}" >>"$GITHUB_ENV"
-          done
-        env:
-          SECRETS: ${{ toJson(secrets) }}
+      # - name: Setup env
+      #   run: |
+      #     env_json=$(echo "${SECRETS}" | jq -r 'to_entries | .[] | @json')
+      #     for i in ${env_json}; do
+      #     env_key=$(echo "$i" | jq -r '.key')
+      #     env_value=$(echo "$i" | jq -r '.value')
+      #     echo "TF_VAR_${env_key,,}=${env_value}" >>"$GITHUB_ENV"
+      #     done
+      #   env:
+      #     SECRETS: ${{ toJson(secrets) }}
 
       - name: Terraform plan for resources change
         run: terraform plan -input=false -no-color -lock-timeout=10m
@@ -59,7 +68,7 @@ jobs:
       - name: Comment result to Pull Request
         uses: SoaB1/terraform-pr-commenter@v1.6.4
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
         with:
           commenter_type: plan
           commenter_input: ${{ format('{0}{1}', steps.tf_plan.outputs.stdout, steps.tf_plan.outputs.stderr) }}
