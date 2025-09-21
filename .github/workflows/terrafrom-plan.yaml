@@ -41,41 +41,12 @@ jobs:
         run: terraform fmt -check
         working-directory: "./terraform"
 
-      - name: debug info
-        run: |
-          echo "AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION:0:1} ${AWS_DEFAULT_REGION#?}"
-          echo "AWS_REGION: ${AWS_REGION:0:1} ${AWS_REGION#?}"
-          echo "AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:0:1} ${AWS_ACCESS_KEY_ID#?}"
-          echo "AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:0:1} ${AWS_SECRET_ACCESS_KEY#?}"
-          echo "AWS_SESSION_TOKEN: ${AWS_SESSION_TOKEN:0:1} ${AWS_SESSION_TOKEN#?}"
-          echo "TF_VAR_tailscale_api_key: ${TF_VAR_tailscale_api_key:0:1} ${TF_VAR_tailscale_api_key#?}"
-          echo "TF_VAR_tailscale_tailnet: ${TF_VAR_tailscale_tailnet:0:1} ${TF_VAR_tailscale_tailnet#?}"
-          echo "TF_VAR_aws_region: ${TF_VAR_aws_region:0:1} ${TF_VAR_aws_region#?}"
-          echo "TF_VAR_aws_vpc_cidr: ${TF_VAR_aws_vpc_cidr:0:1} ${TF_VAR_aws_vpc_cidr#?}"
-          echo "TF_VAR_aws_vpc_subnet_cidr: ${TF_VAR_aws_vpc_subnet_cidr:0:1} ${TF_VAR_aws_vpc_subnet_cidr#?}"
-          echo "TF_VAR_aws_ec2_instance_type: ${TF_VAR_aws_ec2_instance_type:0:1} ${TF_VAR_aws_ec2_instance_type#?}"
-          echo "TF_VAR_aws_ec2_server_name: ${TF_VAR_aws_ec2_server_name:0:1} ${TF_VAR_aws_ec2_server_name#?}"
-          echo "TF_VAR_aws_ec2_server_private_ip: ${TF_VAR_aws_ec2_server_private_ip:0:1} ${TF_VAR_aws_ec2_server_private_ip#?}"
-          echo "TF_VAR_ansible_webhook: ${TF_VAR_ansible_webhook:0:1} ${TF_VAR_ansible_webhook#?}"
-          echo "TERRAFORM_CLOUD_API_TOKEN: ${TERRAFORM_CLOUD_API_TOKEN:0:1} ${TERRAFORM_CLOUD_API_TOKEN#?}"
-
       - run: terraform init
         working-directory: "./terraform"
 
       - name: Terraform validate
         run: terraform validate -no-color
         working-directory: "./terraform"
-
-      # - name: Setup env
-      #   run: |
-      #     env_json=$(echo "${SECRETS}" | jq -r 'to_entries | .[] | @json')
-      #     for i in ${env_json}; do
-      #     env_key=$(echo "$i" | jq -r '.key')
-      #     env_value=$(echo "$i" | jq -r '.value')
-      #     echo "TF_VAR_${env_key,,}=${env_value}" >>"$GITHUB_ENV"
-      #     done
-      #   env:
-      #     SECRETS: ${{ toJson(secrets) }}
 
       - name: Terraform plan for resources change
         run: terraform plan -input=false -no-color -lock-timeout=10m
