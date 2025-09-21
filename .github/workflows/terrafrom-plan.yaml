@@ -30,7 +30,6 @@ jobs:
           secret-ids: |
             TF_VAR_*
             TERRAFORM_CLOUD_API_TOKEN
-            GITHUB_TOKEN
           name-transformation: none
 
       - uses: hashicorp/setup-terraform@v2
