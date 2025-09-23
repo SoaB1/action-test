@@ -9,7 +9,7 @@ jobs:
     name: Tailscale SSH
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
 
       - name: Set up Tailscale
         uses: tailscale/github-action@v2
