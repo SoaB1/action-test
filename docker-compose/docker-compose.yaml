@@ -3,7 +3,7 @@ volumes:
 
 services:
   cloudflared:
-    image: ghcr.io/soab1/cloudflared-auto-dns:2023.7.3
+    image: ghcr.io/soab1/cloudflared-auto-dns:2025.9.1
     volumes:
       - cloudflared-home:/root
       - ./cloudflared-tunnel-config.yml:/etc/cloudflared/tunnel-config.yml
