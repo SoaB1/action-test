@@ -1,0 +1,14 @@
+volumes:
+  cloudflared-home:
+
+services:
+  cloudflared:
+    image: ghcr.io/soab1/cloudflared-auto-dns:2023.7.3
+    volumes:
+      - cloudflared-home:/root
+      - ./cloudflared-tunnel-config.yml:/etc/cloudflared/tunnel-config.yml
+      - ./cert.pem:/root/.cloudflared/cert.pem
+    network_mode: "host"
+    restart: always
+    environment:
+      TUNNEL_NAME: TEST
