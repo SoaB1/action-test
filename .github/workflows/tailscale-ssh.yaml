@@ -4,12 +4,46 @@ run-name: ${{ github.workflow }} (${{ github.ref_name }})
 on:
   workflow_dispatch:
 
+permissions:
+  contents: "write"
+  id-token: "write"
+
 jobs:
   tailscale_ssh:
     name: Tailscale SSH
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.IAM_ROLE_NAME }}
+          aws-region: ap-northeast-3
+
+      - name: Get secrets by name and by ARN
+        uses: aws-actions/aws-secretsmanager-get-secrets@v2
+        with:
+          secret-ids: |
+            TF_VAR_*
+            EC2_SSH_KEY, ec2-key
+          name-transformation: none
+
+      # - name: Setup env
+      #   run: |
+      #     echo "${TEST_ENV}" | jq -r 'to_entries | .[] | "\(.key)=\(.value | @json)"' >>"$GITHUB_ENV"
+      #     # for i in ${env_json}; do
+      #     # env_key=$(echo "$i" | jq -r '.key')
+      #     # env_value=$(echo "$i" | jq -r '.value')
+      #     # echo "TF_VAR_${env_key,,}=${env_value}" >>"$GITHUB_ENV"
+      #     # done
+
+      # - name: Show secrets
+      #   run: |
+      #     printenv | grep "TF_VAR_" | while IFS='=' read -r VAR_NAME VAR_VALUE; do
+      #       name="${VAR_NAME#TF_VAR_}"
+      #       echo "TF_VAR_${name}=${VAR_VALUE:0:1} ${VAR_VALUE#?}"
+      #     done
 
       - name: Set up Tailscale
         uses: tailscale/github-action@v2
@@ -20,7 +54,7 @@ jobs:
 
       - name: Execute script on Tailscale SSH
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/private_key
+          echo "${EC2_SSH_KEY}" > /tmp/private_key
           chmod 600 /tmp/private_key
           git ls-files -s
           ls -l /tmp/private_key
