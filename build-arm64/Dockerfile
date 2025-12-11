@@ -1,4 +1,4 @@
-FROM cloudflare/cloudflared:2022.8.2-arm64 as cloudflared-binary
+FROM cloudflare/cloudflared:2022.12.1-arm64 as cloudflared-binary
 
 FROM alpine:3.16
 ARG TARGETARCH
