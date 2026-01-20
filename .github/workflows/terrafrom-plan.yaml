@@ -16,7 +16,7 @@ jobs:
     name: Terraform plan
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
 
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v4
