@@ -33,7 +33,7 @@ jobs:
         run: echo "EXECUTE_DATE=$(date +%Y%m%d-%H%M%S)" >> "$GITHUB_ENV"
 
       - name: Upload result log
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: "${{ env.EXECUTE_DATE }}_script-result"
           path: /tmp/script-result.log
