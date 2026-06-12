@@ -1,6 +1,6 @@
 FROM cloudflare/cloudflared:2022.8.2-arm64 as cloudflared-binary
 
-FROM alpine:3.16
+FROM alpine:3.24
 ARG TARGETARCH
 
 COPY --from=cloudflared-binary /usr/local/bin/cloudflared /usr/local/bin/
